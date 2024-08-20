@@ -30,6 +30,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+	// cache
+	implementation("org.springframework.boot:spring-boot-starter-cache")
+	implementation("org.ehcache:ehcache:3.10.8") {
+	  capabilities {
+		requireCapability("org.ehcache:ehcache-jakarta")
+	  }
+	}
+	implementation("javax.cache:cache-api:1.1.1")
+
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("com.h2database:h2")
 	annotationProcessor("org.projectlombok:lombok")

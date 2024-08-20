@@ -20,8 +20,8 @@ abstract class BaseEntity {
     var id: Long? = null
 
     @CreatedDate
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @LastModifiedDate
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
 }
