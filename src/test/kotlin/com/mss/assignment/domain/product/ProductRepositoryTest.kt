@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import kotlin.test.Test
 
 @DataJpaTest
@@ -30,7 +31,7 @@ class ProductRepositoryTest(
         val product2 = productRepository.save(Product(brand = brand, category = category, price = BigDecimal(1000)))
 
         // when
-        val result = productRepository.findLowestPriceProductsByCategoryIds(listOf(category.id!!))
+        val result = productRepository.findLowestPriceProductsByCategoryIds(listOf(category.id))
 
         // then
         assertEquals(1, result.size)
