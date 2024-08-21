@@ -33,4 +33,10 @@ class Product(
 
     var price: BigDecimal = price
         private set
+
+    fun update(brand: Brand, category: Category, price: BigDecimal) {
+        this.brand = brand
+        this.category = category
+        this.price = price
+    }
 }

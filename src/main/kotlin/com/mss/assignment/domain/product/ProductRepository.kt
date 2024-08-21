@@ -1,9 +1,11 @@
 package com.mss.assignment.domain.product
 
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 interface ProductRepository : JpaRepository<Product, Long> {
@@ -26,4 +28,7 @@ interface ProductRepository : JpaRepository<Product, Long> {
         ORDER BY p.category.id ASC
     """)
     fun findProductsWithBrandAndCategory(@Param("ids") ids: List<Long>): List<Product>
+
+    @EntityGraph(attributePaths = ["brand", "category"])
+    override fun findById(id: Long): Optional<Product>
 }

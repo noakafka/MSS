@@ -104,7 +104,7 @@ class CoordinationServiceTest {
     @Test
     fun `ProductRepository에서 findLowestPriceProductsByCategoryIds 메서드가 null을 반환하는 경우`() {
         // given
-        val categoryIds = listOf(category1.id!!)
+        val categoryIds = listOf(category1.id)
         `when`(categoryService.findAllCategoryIds()).thenReturn(categoryIds)
         `when`(productRepository.findLowestPriceProductsByCategoryIds(categoryIds)).thenReturn(null)
 
