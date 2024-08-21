@@ -1,10 +1,12 @@
 package com.mss.assignment.domain.product
 
+import com.mss.assignment.dto.PriceSummary
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.math.BigDecimal
 import java.util.*
 
 @Repository
@@ -31,4 +33,23 @@ interface ProductRepository : JpaRepository<Product, Long> {
 
     @EntityGraph(attributePaths = ["brand", "category"])
     override fun findById(id: Long): Optional<Product>
+
+    @Query("""
+        SELECT MIN(p.price) 
+        FROM Product p
+        JOIN p.category c
+        WHERE c.name = :categoryName
+    """)
+    fun findMinPriceByCategoryName(@Param("categoryName") categoryName: String): BigDecimal
+
+    @Query("""
+        SELECT MAX(p.price) 
+        FROM Product p
+        JOIN p.category c
+        WHERE c.name = :categoryName
+    """)
+    fun findMaxPriceByCategoryName(@Param("categoryName") categoryName: String): BigDecimal
+
+    @EntityGraph(attributePaths = ["brand", "category"])
+    fun findProductsByCategoryNameAndPrice(categoryName: String, price: BigDecimal): List<PriceSummary.ProductWithBrandAndPrice>
 }

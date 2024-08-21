@@ -27,7 +27,7 @@ class BrandService(
     }
 
     @Transactional
-    @CacheEvict("lowestPriceProductsByCategory", allEntries = true)
+    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory"], allEntries = true)
     fun deleteBrand(id: Long) {
         if (!brandRepository.existsById(id)) {
             throw IllegalArgumentException("Brand not found with id: $id")
