@@ -52,7 +52,7 @@ class ProductRepositoryTest(
         val product4 = productRepository.save(Product(brand = brand2, category = category2, price = BigDecimal(400)))
 
         // when
-        val result = productRepository.findLowestPriceProductsByCategoryIds(listOf(category1.id!!, category2.id!!))
+        val result = productRepository.findLowestPriceProductsByCategoryIds(listOf(category1.id, category2.id))
 
         // then
         assertEquals(2, result.size)
@@ -72,7 +72,7 @@ class ProductRepositoryTest(
         val product2 = productRepository.save(Product(brand = brand2, category = category2, price = BigDecimal(300)))
 
         // when
-        val result = productRepository.findProductsWithBrandAndCategory(listOf(product1.id!!, product2.id!!))
+        val result = productRepository.findProductsWithBrandAndCategory(listOf(product1.id, product2.id))
 
         // then
         assertEquals(2, result.size)
@@ -91,7 +91,7 @@ class ProductRepositoryTest(
         val category1 = categoryRepository.save(Category(name = "Electronics"))
 
         // when
-        val result = productRepository.findLowestPriceProductsByCategoryIds(listOf(category1.id!!))
+        val result = productRepository.findLowestPriceProductsByCategoryIds(listOf(category1.id))
 
         // then
         assertTrue(result.isEmpty())
