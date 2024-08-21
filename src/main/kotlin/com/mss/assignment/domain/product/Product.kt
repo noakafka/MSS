@@ -4,19 +4,33 @@ import com.mss.assignment.domain.BaseEntity
 import com.mss.assignment.domain.brand.Brand
 import com.mss.assignment.domain.category.Category
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import java.math.BigDecimal
 
 @Entity
-data class Product(
+class Product(
+    brand: Brand,
+    category: Category,
+    price: BigDecimal
+) : BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0
+
     @ManyToOne
     @JoinColumn(name = "brand_id")
-    val brand: Brand,
+    var brand: Brand = brand
+        private set
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    val category: Category,
+    var category: Category = category
+        private set
 
-    val price: BigDecimal
-) : BaseEntity()
+    var price: BigDecimal = price
+        private set
+}
