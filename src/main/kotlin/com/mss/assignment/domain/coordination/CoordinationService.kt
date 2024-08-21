@@ -43,10 +43,8 @@ class CoordinationService(
 
     @Cacheable("priceSummaryForCategory")
     fun getPriceSummaryForCategory(categoryName: String): PriceSummary {
-        val minPrice = productRepository.findMinPriceByCategoryName(categoryName)
+        val (minPrice, maxPrice) = productRepository.findMinMaxPriceByCategoryName(categoryName)
         val minPriceProducts = productRepository.findProductsByCategoryNameAndPrice(categoryName, minPrice)
-
-        val maxPrice = productRepository.findMaxPriceByCategoryName(categoryName)
         val maxPriceProducts = productRepository.findProductsByCategoryNameAndPrice(categoryName, maxPrice)
 
         return PriceSummary(

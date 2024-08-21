@@ -5,6 +5,7 @@ import com.mss.assignment.domain.category.Category
 import com.mss.assignment.domain.category.CategoryService
 import com.mss.assignment.domain.product.Product
 import com.mss.assignment.domain.product.ProductRepository
+import com.mss.assignment.dto.MinMaxPrice
 import com.mss.assignment.dto.PriceSummary
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -146,10 +147,9 @@ class CoordinationServiceTest {
             PriceSummary.ProductWithBrandAndPrice(brand2.name, maxPrice)
         )
 
-        `when`(productRepository.findMinPriceByCategoryName(categoryName)).thenReturn(minPrice)
+        `when`(productRepository.findMinMaxPriceByCategoryName(categoryName)).thenReturn(MinMaxPrice(minPrice, maxPrice))
         `when`(productRepository.findProductsByCategoryNameAndPrice(categoryName, minPrice)).thenReturn(minPriceProducts)
 
-        `when`(productRepository.findMaxPriceByCategoryName(categoryName)).thenReturn(maxPrice)
         `when`(productRepository.findProductsByCategoryNameAndPrice(categoryName, maxPrice)).thenReturn(maxPriceProducts)
 
         // when
@@ -169,10 +169,8 @@ class CoordinationServiceTest {
         val minPrice = BigDecimal.ZERO
         val maxPrice = BigDecimal.ZERO
 
-        `when`(productRepository.findMinPriceByCategoryName(categoryName)).thenReturn(minPrice)
+        `when`(productRepository.findMinMaxPriceByCategoryName(categoryName)).thenReturn(MinMaxPrice(minPrice, maxPrice))
         `when`(productRepository.findProductsByCategoryNameAndPrice(categoryName, minPrice)).thenReturn(emptyList())
-
-        `when`(productRepository.findMaxPriceByCategoryName(categoryName)).thenReturn(maxPrice)
         `when`(productRepository.findProductsByCategoryNameAndPrice(categoryName, maxPrice)).thenReturn(emptyList())
 
         // when
