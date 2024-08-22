@@ -5,6 +5,7 @@ import com.mss.assignment.domain.product.Product
 import com.mss.assignment.domain.product.ProductRepository
 import com.mss.assignment.dto.ProductDto
 import com.mss.assignment.dto.LowestPriceResponse
+import com.mss.assignment.dto.PriceSummary
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
@@ -37,6 +38,19 @@ class CoordinationService(
         return LowestPriceResponse(
             items = items,
             totalPrice = totalPrice
+        )
+    }
+
+    @Cacheable("priceSummaryForCategory")
+    fun getPriceSummaryForCategory(categoryName: String): PriceSummary {
+        val (minPrice, maxPrice) = productRepository.findMinMaxPriceByCategoryName(categoryName)
+        val minPriceProducts = productRepository.findProductsByCategoryNameAndPrice(categoryName, minPrice)
+        val maxPriceProducts = productRepository.findProductsByCategoryNameAndPrice(categoryName, maxPrice)
+
+        return PriceSummary(
+            category = categoryName,
+            minPrice = minPriceProducts,
+            maxPrice = maxPriceProducts
         )
     }
 }

@@ -10,6 +10,6 @@ class CategoryService(
 
     @Cacheable("categoryIds")
     fun findAllCategoryIds(): List<Long> {
-        return categoryRepository.findAll().map { it.id!! }
+        return categoryRepository.findAll().map { it.id }
     }
 }

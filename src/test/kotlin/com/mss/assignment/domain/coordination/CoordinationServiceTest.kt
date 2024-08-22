@@ -5,7 +5,10 @@ import com.mss.assignment.domain.category.Category
 import com.mss.assignment.domain.category.CategoryService
 import com.mss.assignment.domain.product.Product
 import com.mss.assignment.domain.product.ProductRepository
+import com.mss.assignment.dto.MinMaxPrice
+import com.mss.assignment.dto.PriceSummary
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -127,5 +130,56 @@ class CoordinationServiceTest {
         // then
         assertTrue(response.items.isEmpty())
         assertEquals(BigDecimal.ZERO, response.totalPrice)
+    }
+
+    @Test
+    fun `특정 카테고리의 가격 요약을 올바르게 반환`() {
+        // given
+        val categoryName = "Category1"
+        val minPrice = BigDecimal(1000)
+        val maxPrice = BigDecimal(2000)
+
+        val minPriceProducts = listOf(
+            PriceSummary.ProductWithBrandAndPrice(brand1.name, minPrice)
+        )
+
+        val maxPriceProducts = listOf(
+            PriceSummary.ProductWithBrandAndPrice(brand2.name, maxPrice)
+        )
+
+        `when`(productRepository.findMinMaxPriceByCategoryName(categoryName)).thenReturn(MinMaxPrice(minPrice, maxPrice))
+        `when`(productRepository.findProductsByCategoryNameAndPrice(categoryName, minPrice)).thenReturn(minPriceProducts)
+
+        `when`(productRepository.findProductsByCategoryNameAndPrice(categoryName, maxPrice)).thenReturn(maxPriceProducts)
+
+        // when
+        val result = coordinationService.getPriceSummaryForCategory(categoryName)
+
+        // then
+        assertNotNull(result)
+        assertEquals(categoryName, result.category)
+        assertEquals(minPriceProducts, result.minPrice)
+        assertEquals(maxPriceProducts, result.maxPrice)
+    }
+
+    @Test
+    fun `카테고리에 상품이 없는 경우 빈 리스트를 반환`() {
+        // given
+        val categoryName = "Category1"
+        val minPrice = BigDecimal.ZERO
+        val maxPrice = BigDecimal.ZERO
+
+        `when`(productRepository.findMinMaxPriceByCategoryName(categoryName)).thenReturn(MinMaxPrice(minPrice, maxPrice))
+        `when`(productRepository.findProductsByCategoryNameAndPrice(categoryName, minPrice)).thenReturn(emptyList())
+        `when`(productRepository.findProductsByCategoryNameAndPrice(categoryName, maxPrice)).thenReturn(emptyList())
+
+        // when
+        val result = coordinationService.getPriceSummaryForCategory(categoryName)
+
+        // then
+        assertNotNull(result)
+        assertEquals(categoryName, result.category)
+        assertTrue(result.minPrice.isEmpty())
+        assertTrue(result.maxPrice.isEmpty())
     }
 }

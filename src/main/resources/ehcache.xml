@@ -17,4 +17,5 @@
   </cache-template>
   <cache alias="categoryIds" uses-template="defaultTemplate"></cache>
   <cache alias="lowestPriceProductsByCategory" uses-template="defaultTemplate"></cache>
+  <cache alias="priceSummaryForCategory" uses-template="defaultTemplate"></cache>
 </config>
