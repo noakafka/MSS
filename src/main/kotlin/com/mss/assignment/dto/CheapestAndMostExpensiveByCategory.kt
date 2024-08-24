@@ -2,10 +2,10 @@ package com.mss.assignment.dto
 
 import java.math.BigDecimal
 
-data class PriceSummary(
+data class CheapestAndMostExpensiveByCategory(
     val category: String,
-    val minPrice: List<ProductWithBrandAndPrice>,
-    val maxPrice: List<ProductWithBrandAndPrice>,
+    val cheapestProduct: ProductWithBrandAndPrice,
+    val mostExpensiveProduct: ProductWithBrandAndPrice,
 ) {
     data class ProductWithBrandAndPrice(
         val brandName: String,

@@ -15,7 +15,7 @@
       <heap>1000</heap>
     </resources>
   </cache-template>
-  <cache alias="categoryIds" uses-template="defaultTemplate"></cache>
   <cache alias="lowestPriceProductsByCategory" uses-template="defaultTemplate"></cache>
   <cache alias="priceSummaryForCategory" uses-template="defaultTemplate"></cache>
+  <cache alias="cheapestCoordinationByBrand" uses-template="defaultTemplate"></cache>
 </config>
