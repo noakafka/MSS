@@ -21,17 +21,23 @@ class CoordinationService(
         val productDtoList = productRepository.findCheapestByCategoryOrderByCategory().map {
             ProductDto.fromEntity(it)
         }
+        if (productDtoList.isEmpty()) { throw NoSuchElementException("No product found") }
         return CheapestEachCategory.fromProductDtoList(productDtoList)
     }
 
+    @Cacheable("cheapestCoordinationByBrand")
+    fun findCheapestCoordinationByBrand(): CheapestCoordinationByBrand {
+        val brand = brandRepository.findCheapestBrand().getOrElse { throw NoSuchElementException("No brand found") }
+        return  CheapestCoordinationByBrand.fromProductList(productRepository.findCheapestCoordinationByBrands(brand.id))
+    }
 
     @Cacheable("priceSummaryForCategory")
     fun getCheapestAndMostExpensiveByCategory(categoryName: String): CheapestAndMostExpensiveByCategory {
-        val cheapestProduct = productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(categoryName).getOrElse { throw NoSuchElementException("No product found for category $categoryName") }
+        val cheapestProduct = productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(categoryName).getOrElse { throw NoSuchElementException("No product found for category") }
         val mostExpensiveProduct = productRepository.findFirstByCategoryNameOrderByPriceDescUpdatedAtDesc(categoryName).getOrElse { cheapestProduct }
 
         return CheapestAndMostExpensiveByCategory(
-            category = categoryName,
+            categoryName = categoryName,
             cheapestProduct = ProductWithBrandAndPrice(
                 brandName = cheapestProduct.brand.name,
                 price = cheapestProduct.price
@@ -41,11 +47,5 @@ class CoordinationService(
                 price = mostExpensiveProduct.price
             ),
         )
-    }
-
-    @Cacheable("cheapestCoordinationByBrand")
-    fun findCheapestCoordinationByBrand(): CheapestCoordinationByBrand {
-        val brand = brandRepository.findCheapestBrand()
-        return  CheapestCoordinationByBrand.fromProductList(productRepository.findCheapestCoordinationByBrands(brand.id))
     }
 }

@@ -40,28 +40,6 @@ interface ProductRepository : JpaRepository<Product, Long> {
     fun findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(categoryName: String): Optional<Product>
 
     @EntityGraph(attributePaths = ["brand", "category"])
-//    @Query("""
-//        SELECT b.name, c.name, MIN(p.price) AS price
-//        FROM Product p
-//        JOIN p.category c
-//        JOIN p.brand b
-//        WHERE p.brand.id = (
-//            SELECT subquery.brand.id
-//            FROM Product subquery
-//            GROUP BY subquery.brand.id
-//            HAVING SUM(subquery.price) = (
-//                SELECT MIN(innerQuery.totalPrice)
-//                FROM (
-//                    SELECT SUM(p2.price) AS totalPrice
-//                    FROM Product p2
-//                    GROUP BY p2.brand.id
-//                ) AS innerQuery
-//            )
-//        )
-//        GROUP BY b.name, c.name
-//        ORDER BY c.id ASC
-//    """
-//    )
     @Query("""
         SELECT p 
         FROM Product p
@@ -81,16 +59,4 @@ interface ProductRepository : JpaRepository<Product, Long> {
         )
     """)
     fun findCheapestCoordinationByBrands(@Param("brandId") brandId: Long): List<Product>
-}
-
-data class CategoryBrandPrice(
-    val categoryName: String,
-    val brandName: String,
-    val price: BigDecimal
-)
-
-interface CheapestBrand {
-    val id: Long
-    val name: String
-    val totalPrice: BigDecimal
 }
