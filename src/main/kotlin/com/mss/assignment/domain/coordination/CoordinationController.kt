@@ -1,5 +1,6 @@
 package com.mss.assignment.domain.coordination
 
+import com.mss.assignment.domain.coordination.response.CheapestCoordinationByBrandResponse
 import com.mss.assignment.dto.LowestPriceResponse
 import com.mss.assignment.dto.PriceSummary
 import org.springframework.http.ResponseEntity
@@ -24,6 +25,12 @@ class CoordinationController(
         @RequestParam("category") category: String
     ): ResponseEntity<PriceSummary> {
         val response = coordinationService.getPriceSummaryForCategory(category)
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/cheapest-coordination-by-brand")
+    fun getCheapestOutfitByBrand(): ResponseEntity<CheapestCoordinationByBrandResponse> {
+        val response = coordinationService.findCheapestCoordinationByBrand()
         return ResponseEntity.ok(response)
     }
 }
