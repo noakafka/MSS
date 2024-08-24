@@ -1,5 +1,6 @@
 package com.mss.assignment.domain.product
 
+import com.mss.assignment.dto.CheapestCoordinationByBrand
 import com.mss.assignment.dto.MinMaxPrice
 import com.mss.assignment.dto.PriceSummary
 import org.springframework.data.jpa.repository.EntityGraph
@@ -45,4 +46,44 @@ interface ProductRepository : JpaRepository<Product, Long> {
 
     @EntityGraph(attributePaths = ["brand", "category"])
     fun findProductsByCategoryNameAndPrice(categoryName: String, price: BigDecimal): List<PriceSummary.ProductWithBrandAndPrice>
+
+    @Query(value = """
+    WITH 
+    BrandCategoryMinPrices AS (
+        SELECT p.brand_id, MIN(p.price) AS min_price
+        FROM product p
+        JOIN category c ON p.category_id = c.id
+        GROUP BY p.brand_id, c.id
+    ),
+    BrandTotalPrices AS (
+        SELECT b.id AS id, b.name AS name, SUM(bcmp.min_price) AS total_price
+        FROM BrandCategoryMinPrices bcmp
+        JOIN brand b ON bcmp.brand_id = b.id
+        GROUP BY b.id, b.name
+    )
+    
+    SELECT id, name, total_price AS totalPrice
+    FROM BrandTotalPrices
+    ORDER BY total_price ASC
+    LIMIT 1;
+    """, nativeQuery = true)
+    fun findCheapestBrand(): CheapestBrand
+
+    @Query("""
+        SELECT new com.mss.assignment.dto.CheapestCoordinationByBrand(
+          c.name, MIN(p.price)
+        )
+        FROM Product p
+        JOIN category c
+        JOIN brand b
+        WHERE b.id = :brandId
+        GROUP BY b.id, c.id
+    """)
+    fun findCheapestCoordinationByBrands(@Param("brandId") brandId: Long): List<CheapestCoordinationByBrand>
 }
+
+ interface CheapestBrand {
+     val id: Long
+     val name: String
+     val totalPrice: BigDecimal
+ }

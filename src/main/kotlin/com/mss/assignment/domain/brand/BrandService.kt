@@ -34,4 +34,8 @@ class BrandService(
         }
         brandRepository.deleteById(id)
     }
+
+    fun findAllCategoryBrand(): List<Long> {
+        return brandRepository.findAllCategoryBrands()
+    }
 }

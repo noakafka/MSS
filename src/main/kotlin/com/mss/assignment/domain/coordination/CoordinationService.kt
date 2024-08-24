@@ -1,11 +1,12 @@
 package com.mss.assignment.domain.coordination
 
 import com.mss.assignment.domain.category.CategoryService
+import com.mss.assignment.domain.coordination.response.CheapestCoordinationByBrandResponse
 import com.mss.assignment.domain.product.Product
 import com.mss.assignment.domain.product.ProductRepository
-import com.mss.assignment.dto.ProductDto
 import com.mss.assignment.dto.LowestPriceResponse
 import com.mss.assignment.dto.PriceSummary
+import com.mss.assignment.dto.ProductDto
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
@@ -51,6 +52,16 @@ class CoordinationService(
             category = categoryName,
             minPrice = minPriceProducts,
             maxPrice = maxPriceProducts
+        )
+    }
+
+    fun findCheapestCoordinationByBrand(): CheapestCoordinationByBrandResponse {
+        val cheapestBrand = productRepository.findCheapestBrand()
+        val cheapestCoordination = productRepository.findCheapestCoordinationByBrands(cheapestBrand.id)
+        return CheapestCoordinationByBrandResponse(
+            brandName = cheapestBrand.name,
+            cheapestProductsByCategory = cheapestCoordination,
+            totalPrice = cheapestBrand.totalPrice
         )
     }
 }

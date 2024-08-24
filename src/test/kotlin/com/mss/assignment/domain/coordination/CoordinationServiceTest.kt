@@ -1,6 +1,7 @@
 package com.mss.assignment.domain.coordination
 
 import com.mss.assignment.domain.brand.Brand
+import com.mss.assignment.domain.brand.BrandService
 import com.mss.assignment.domain.category.Category
 import com.mss.assignment.domain.category.CategoryService
 import com.mss.assignment.domain.product.Product
@@ -27,6 +28,9 @@ class CoordinationServiceTest {
 
     @Mock
     private lateinit var productRepository: ProductRepository
+
+    @Mock
+    private lateinit var brandService: BrandService
 
     @InjectMocks
     private lateinit var coordinationService: CoordinationService
