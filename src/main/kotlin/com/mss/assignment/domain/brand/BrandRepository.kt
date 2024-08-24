@@ -3,6 +3,7 @@ package com.mss.assignment.domain.brand
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 interface BrandRepository : JpaRepository<Brand, Long> {
@@ -20,5 +21,5 @@ interface BrandRepository : JpaRepository<Brand, Long> {
             LIMIT 1
         )
     """)
-    fun findCheapestBrand(): Brand
+    fun findCheapestBrand(): Optional<Brand>
 }

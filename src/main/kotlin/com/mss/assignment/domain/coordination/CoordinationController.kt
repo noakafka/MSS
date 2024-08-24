@@ -1,7 +1,6 @@
 package com.mss.assignment.domain.coordination
 
 import com.mss.assignment.domain.coordination.response.CheapestCoordinationByBrand
-import com.mss.assignment.domain.product.CategoryBrandPrice
 import com.mss.assignment.dto.CheapestEachCategory
 import com.mss.assignment.dto.CheapestAndMostExpensiveByCategory
 import org.springframework.http.ResponseEntity

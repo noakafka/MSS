@@ -3,7 +3,7 @@ package com.mss.assignment.dto
 import java.math.BigDecimal
 
 data class CheapestAndMostExpensiveByCategory(
-    val category: String,
+    val categoryName: String,
     val cheapestProduct: ProductWithBrandAndPrice,
     val mostExpensiveProduct: ProductWithBrandAndPrice,
 ) {

@@ -115,7 +115,7 @@ class ProductRepositoryTest(
         val product4 = productRepository.save(Product(brand = brand1, category = category1, price = BigDecimal(2000)))
 
         // when
-        val cheapestBrand = brandRepository.findCheapestBrand()
+        val cheapestBrand = brandRepository.findCheapestBrand().getOrNull()!!
         val result = productRepository.findCheapestCoordinationByBrands(cheapestBrand.id)
 
         // then
