@@ -17,7 +17,7 @@ class ProductService(
 ) {
 
     @Transactional
-    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory"], allEntries = true)
+    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory", "cheapestCoordinationByBrand"], allEntries = true)
     fun createProduct(productDto: ProductRequest): ProductDto {
         val brand = brandRepository.findById(productDto.brandId)
             .orElseThrow { IllegalArgumentException("Invalid brand ID") }
@@ -34,7 +34,7 @@ class ProductService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory"], allEntries = true)
+    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory", "cheapestCoordinationByBrand"], allEntries = true)
     fun updateProduct(id: Long, productDto: ProductRequest): ProductDto {
         val product = productRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Product not found with ID: $id") }
@@ -54,7 +54,7 @@ class ProductService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory"], allEntries = true)
+    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory", "cheapestCoordinationByBrand"], allEntries = true)
     fun deleteProduct(id: Long) {
         if (!productRepository.existsById(id)) {
             throw EntityNotFoundException("Product not found with ID: $id")

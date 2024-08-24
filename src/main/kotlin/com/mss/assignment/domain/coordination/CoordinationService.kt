@@ -1,67 +1,51 @@
 package com.mss.assignment.domain.coordination
 
-import com.mss.assignment.domain.category.CategoryService
-import com.mss.assignment.domain.coordination.response.CheapestCoordinationByBrandResponse
-import com.mss.assignment.domain.product.Product
+import com.mss.assignment.domain.brand.BrandRepository
+import com.mss.assignment.domain.coordination.response.CheapestCoordinationByBrand
 import com.mss.assignment.domain.product.ProductRepository
-import com.mss.assignment.dto.LowestPriceResponse
-import com.mss.assignment.dto.PriceSummary
+import com.mss.assignment.dto.CheapestAndMostExpensiveByCategory
+import com.mss.assignment.dto.CheapestAndMostExpensiveByCategory.ProductWithBrandAndPrice
+import com.mss.assignment.dto.CheapestEachCategory
 import com.mss.assignment.dto.ProductDto
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrElse
 
 @Service
 class CoordinationService(
-    private val categoryService: CategoryService,
+    private val brandRepository: BrandRepository,
     private val productRepository: ProductRepository,
 ) {
     @Cacheable("lowestPriceProductsByCategory")
-    fun findLowestPriceProductsByCategory(): LowestPriceResponse {
-        val allCategories = categoryService.findAllCategoryIds()
-        val latestProductIdsByCategory = productRepository.findLowestPriceProductsByCategoryIds(allCategories)
-
-        // for n+1 problem
-        val products = productRepository.findProductsWithBrandAndCategory(latestProductIdsByCategory)
-
-        return createLowestPriceResponse(products)
-    }
-
-    private fun createLowestPriceResponse(products: List<Product>): LowestPriceResponse {
-        val items = products.map { product ->
-            ProductDto(
-                categoryName = product.category.name,
-                brandName = product.brand.name,
-                price = product.price
-            )
+    fun findCheapestEachCategory(): CheapestEachCategory {
+        val productDtoList = productRepository.findCheapestByCategoryOrderByCategory().map {
+            ProductDto.fromEntity(it)
         }
-
-        val totalPrice = items.sumOf { it.price }
-        return LowestPriceResponse(
-            items = items,
-            totalPrice = totalPrice
-        )
+        return CheapestEachCategory.fromProductDtoList(productDtoList)
     }
+
 
     @Cacheable("priceSummaryForCategory")
-    fun getPriceSummaryForCategory(categoryName: String): PriceSummary {
-        val (minPrice, maxPrice) = productRepository.findMinMaxPriceByCategoryName(categoryName)
-        val minPriceProducts = productRepository.findProductsByCategoryNameAndPrice(categoryName, minPrice)
-        val maxPriceProducts = productRepository.findProductsByCategoryNameAndPrice(categoryName, maxPrice)
+    fun getCheapestAndMostExpensiveByCategory(categoryName: String): CheapestAndMostExpensiveByCategory {
+        val cheapestProduct = productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(categoryName).getOrElse { throw NoSuchElementException("No product found for category $categoryName") }
+        val mostExpensiveProduct = productRepository.findFirstByCategoryNameOrderByPriceDescUpdatedAtDesc(categoryName).getOrElse { cheapestProduct }
 
-        return PriceSummary(
+        return CheapestAndMostExpensiveByCategory(
             category = categoryName,
-            minPrice = minPriceProducts,
-            maxPrice = maxPriceProducts
+            cheapestProduct = ProductWithBrandAndPrice(
+                brandName = cheapestProduct.brand.name,
+                price = cheapestProduct.price
+            ),
+            mostExpensiveProduct = ProductWithBrandAndPrice(
+                brandName = mostExpensiveProduct.brand.name,
+                price = mostExpensiveProduct.price
+            ),
         )
     }
 
-    fun findCheapestCoordinationByBrand(): CheapestCoordinationByBrandResponse {
-        val cheapestBrand = productRepository.findCheapestBrand()
-        val cheapestCoordination = productRepository.findCheapestCoordinationByBrands(cheapestBrand.id)
-        return CheapestCoordinationByBrandResponse(
-            brandName = cheapestBrand.name,
-            cheapestProductsByCategory = cheapestCoordination,
-            totalPrice = cheapestBrand.totalPrice
-        )
+    @Cacheable("cheapestCoordinationByBrand")
+    fun findCheapestCoordinationByBrand(): CheapestCoordinationByBrand {
+        val brand = brandRepository.findCheapestBrand()
+        return  CheapestCoordinationByBrand.fromProductList(productRepository.findCheapestCoordinationByBrands(brand.id))
     }
 }

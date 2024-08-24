@@ -6,13 +6,19 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface BrandRepository : JpaRepository<Brand, Long> {
+
     @Query("""
-        SELECT b.id 
-        FROM Brand b
-        JOIN Product p ON b.id = p.brand.id
-        JOIN Category c ON p.category.id = c.id
-        GROUP BY b.id
-        HAVING COUNT(DISTINCT c.id) = (SELECT COUNT(c2.id) FROM Category c2)
+        SELECT b FROM Brand b
+        WHERE b.id = (
+            SELECT subquery.brand_id FROM (
+              SELECT p.brand.id AS brand_id, p.category.id AS category_id, MIN(p.price) AS price
+              FROM Product p
+              GROUP BY p.brand.id, p.category.id
+            ) as subquery
+            GROUP BY subquery.brand_id
+            ORDER BY SUM(subquery.price) ASC, subquery.brand_id DESC
+            LIMIT 1
+        )
     """)
-    fun findAllCategoryBrands(): List<Long>
+    fun findCheapestBrand(): Brand
 }
