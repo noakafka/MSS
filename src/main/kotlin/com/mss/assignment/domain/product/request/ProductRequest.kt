@@ -5,6 +5,5 @@ import java.math.BigDecimal
 data class ProductRequest(
     val brandId: Long,
     val categoryId: Long,
-    val price: BigDecimal
+    val price: BigDecimal,
 )
-

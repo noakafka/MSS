@@ -3,12 +3,12 @@ package com.mss.assignment.domain.brand
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.Optional
 
 @Repository
 interface BrandRepository : JpaRepository<Brand, Long> {
-
-    @Query("""
+    @Query(
+        """
         SELECT b FROM Brand b
         WHERE b.id = (
             SELECT subquery.brand_id FROM (
@@ -20,6 +20,7 @@ interface BrandRepository : JpaRepository<Brand, Long> {
             ORDER BY SUM(subquery.price) ASC, subquery.brand_id DESC
             LIMIT 1
         )
-    """)
+    """,
+    )
     fun findCheapestBrand(): Optional<Brand>
 }

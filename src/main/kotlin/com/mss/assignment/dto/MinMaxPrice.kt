@@ -4,5 +4,5 @@ import java.math.BigDecimal
 
 data class MinMaxPrice(
     val minPrice: BigDecimal,
-    val maxPrice: BigDecimal
+    val maxPrice: BigDecimal,
 )

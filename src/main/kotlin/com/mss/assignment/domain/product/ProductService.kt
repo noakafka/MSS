@@ -14,49 +14,68 @@ import org.springframework.transaction.annotation.Transactional
 class ProductService(
     private val productRepository: ProductRepository,
     private val brandRepository: BrandRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
 ) {
-
     @Transactional
-    @CacheEvict(cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"], allEntries = true)
+    @CacheEvict(
+        cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"],
+        allEntries = true,
+    )
     fun createProduct(productDto: ProductRequest): ProductDto {
-        val brand = brandRepository.findById(productDto.brandId)
-            .orElseThrow { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
-        val category = categoryRepository.findById(productDto.categoryId)
-            .orElseThrow { NotFoundException(ErrorCode.CATEGORY_NOT_FOUND) }
+        val brand =
+            brandRepository.findById(productDto.brandId)
+                .orElseThrow { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
+        val category =
+            categoryRepository.findById(productDto.categoryId)
+                .orElseThrow { NotFoundException(ErrorCode.CATEGORY_NOT_FOUND) }
 
-        val product = Product(
-            brand = brand,
-            category = category,
-            price = productDto.price
-        )
+        val product =
+            Product(
+                brand = brand,
+                category = category,
+                price = productDto.price,
+            )
 
         return ProductDto.fromEntity(productRepository.save(product))
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"], allEntries = true)
-    fun updateProduct(id: Long, productDto: ProductRequest): ProductDto {
-        val product = productRepository.findById(id)
-            .orElseThrow { NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
-        val brand = brandRepository.findById(productDto.brandId)
-            .orElseThrow { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
-        val category = categoryRepository.findById(productDto.categoryId)
-            .orElseThrow { NotFoundException(ErrorCode.CATEGORY_NOT_FOUND) }
+    @CacheEvict(
+        cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"],
+        allEntries = true,
+    )
+    fun updateProduct(
+        id: Long,
+        productDto: ProductRequest,
+    ): ProductDto {
+        val product =
+            productRepository.findById(id)
+                .orElseThrow { NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
+        val brand =
+            brandRepository.findById(productDto.brandId)
+                .orElseThrow { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
+        val category =
+            categoryRepository.findById(productDto.categoryId)
+                .orElseThrow { NotFoundException(ErrorCode.CATEGORY_NOT_FOUND) }
 
         product.update(
             brand = brand,
             category = category,
-            price = productDto.price
+            price = productDto.price,
         )
 
         return ProductDto.fromEntity(productRepository.save(product))
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"], allEntries = true)
+    @CacheEvict(
+        cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"],
+        allEntries = true,
+    )
     fun deleteProduct(id: Long) {
-        if (!productRepository.existsById(id)) { throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
+        if (!productRepository.existsById(id)) {
+            throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND)
+        }
         productRepository.deleteById(id)
     }
 }

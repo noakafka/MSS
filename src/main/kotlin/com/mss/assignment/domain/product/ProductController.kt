@@ -15,23 +15,29 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/products")
 class ProductController(
-    private val productService: ProductService
+    private val productService: ProductService,
 ) {
-
     @PostMapping
-    fun createProduct(@RequestBody productRequest: ProductRequest): ResponseEntity<ProductDto> {
+    fun createProduct(
+        @RequestBody productRequest: ProductRequest,
+    ): ResponseEntity<ProductDto> {
         val createdProduct = productService.createProduct(productRequest)
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct)
     }
 
     @PutMapping("/{id}")
-    fun updateProduct(@PathVariable id: Long, @RequestBody productRequest: ProductRequest): ResponseEntity<ProductDto> {
+    fun updateProduct(
+        @PathVariable id: Long,
+        @RequestBody productRequest: ProductRequest,
+    ): ResponseEntity<ProductDto> {
         val updatedProduct = productService.updateProduct(id, productRequest)
         return ResponseEntity.ok(updatedProduct)
     }
 
     @DeleteMapping("/{id}")
-    fun deleteProduct(@PathVariable id: Long): ResponseEntity<Void> {
+    fun deleteProduct(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
         productService.deleteProduct(id)
         return ResponseEntity.noContent().build()
     }

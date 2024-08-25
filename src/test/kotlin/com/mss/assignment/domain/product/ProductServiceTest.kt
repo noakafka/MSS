@@ -21,12 +21,11 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import java.math.BigDecimal
-import java.util.*
+import java.util.Optional
 import kotlin.test.Test
 
 @ExtendWith(MockitoExtension::class)
 class ProductServiceTest {
-
     @Mock
     private lateinit var productRepository: ProductRepository
 
@@ -55,7 +54,10 @@ class ProductServiceTest {
         setEntityId(product, 1L)
     }
 
-    private fun <T : Any> setEntityId(entity: T, id: Long) {
+    private fun <T : Any> setEntityId(
+        entity: T,
+        id: Long,
+    ) {
         val idField = entity::class.java.getDeclaredField("id")
         idField.isAccessible = true
         idField.set(entity, id)
@@ -86,9 +88,10 @@ class ProductServiceTest {
         `when`(brandRepository.findById(brand.id)).thenReturn(Optional.empty())
 
         // when & then
-        val exception = assertThrows<NotFoundException> {
-            productService.createProduct(productDto)
-        }
+        val exception =
+            assertThrows<NotFoundException> {
+                productService.createProduct(productDto)
+            }
         assertEquals(ErrorCode.BRAND_NOT_FOUND, exception.errorCode)
     }
 
@@ -99,9 +102,10 @@ class ProductServiceTest {
         `when`(productRepository.findById(product.id)).thenReturn(Optional.empty())
 
         // when & then
-        val exception = assertThrows<NotFoundException> {
-            productService.updateProduct(product.id, productDto)
-        }
+        val exception =
+            assertThrows<NotFoundException> {
+                productService.updateProduct(product.id, productDto)
+            }
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.errorCode)
     }
 
@@ -124,9 +128,10 @@ class ProductServiceTest {
         `when`(productRepository.existsById(product.id)).thenReturn(false)
 
         // when & then
-        val exception = assertThrows<NotFoundException> {
-            productService.deleteProduct(product.id)
-        }
+        val exception =
+            assertThrows<NotFoundException> {
+                productService.deleteProduct(product.id)
+            }
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.errorCode)
     }
 }
