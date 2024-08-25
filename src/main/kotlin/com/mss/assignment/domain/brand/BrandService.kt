@@ -1,8 +1,10 @@
 package com.mss.assignment.domain.brand
 
 import com.mss.assignment.exception.ErrorCode
+import com.mss.assignment.exception.GlobalHttpException
 import com.mss.assignment.exception.NotFoundException
 import org.springframework.cache.annotation.CacheEvict
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,6 +19,9 @@ class BrandService(
 
     @Transactional
     fun createBrand(name: String): Brand {
+        if (brandRepository.existsByName(name)) {
+            throw GlobalHttpException(HttpStatus.CONFLICT, ErrorCode.CONFLICT_NAME)
+        }
         val brand = Brand(name = name)
         return brandRepository.save(brand)
     }
@@ -27,6 +32,9 @@ class BrandService(
         name: String,
     ): Brand {
         val brand = getBrandById(id)
+        if (brandRepository.existsByName(name)) {
+            throw GlobalHttpException(HttpStatus.CONFLICT, ErrorCode.CONFLICT_NAME)
+        }
         brand.updateName(name)
         return brandRepository.save(brand)
     }
@@ -38,7 +46,7 @@ class BrandService(
     )
     fun deleteBrand(id: Long) {
         if (!brandRepository.existsById(id)) {
-            NotFoundException(ErrorCode.BRAND_NOT_FOUND)
+            throw NotFoundException(ErrorCode.BRAND_NOT_FOUND)
         }
         brandRepository.deleteById(id)
     }

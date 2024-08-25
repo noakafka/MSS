@@ -4,7 +4,7 @@ import org.springframework.context.MessageSource
 import java.util.Locale
 
 enum class ErrorCode(private val key: String) {
-    BAD_REQUEST("error.bad_request"),
+    CONFLICT_NAME("error.conflict.name"),
     PRODUCT_NOT_FOUND("error.not_found.product"),
     BRAND_NOT_FOUND("error.not_found.brand"),
     CATEGORY_NOT_FOUND("error.not_found.category"),
