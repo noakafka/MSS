@@ -5,6 +5,9 @@ import com.mss.assignment.domain.brand.BrandRepository
 import com.mss.assignment.domain.category.Category
 import com.mss.assignment.domain.product.Product
 import com.mss.assignment.domain.product.ProductRepository
+import com.mss.assignment.exception.ErrorCode
+import com.mss.assignment.exception.GlobalHttpException
+import com.mss.assignment.exception.NotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.given
 import java.math.BigDecimal
 import java.util.*
-import kotlin.NoSuchElementException
 
 @ExtendWith(MockitoExtension::class)
 class CoordinationServiceTest {
@@ -71,12 +73,12 @@ class CoordinationServiceTest {
         given(productRepository.findCheapestByCategoryOrderByCategory()).willReturn(emptyList())
 
         // when
-        val result = assertThrows<NoSuchElementException> {
+        val result = assertThrows<NotFoundException> {
             coordinationService.findCheapestEachCategory()
         }
 
         // then
-        assertThat(result.message).isEqualTo("No product found")
+        assertThat(result.errorCode).isEqualTo(ErrorCode.PRODUCT_NOT_FOUND)
     }
 
     @Test
@@ -104,12 +106,12 @@ class CoordinationServiceTest {
         given(brabdRepository.findCheapestBrand()).willReturn(Optional.empty())
 
         // when
-        val result = assertThrows<NoSuchElementException> {
+        val result = assertThrows<GlobalHttpException> {
             coordinationService.findCheapestCoordinationByBrand()
         }
 
         // then
-        assertThat(result.message).isEqualTo("No brand found")
+        assertThat(result.errorCode).isEqualTo(ErrorCode.BRAND_NOT_FOUND)
     }
 
     @Test
@@ -134,15 +136,15 @@ class CoordinationServiceTest {
     @Test
     fun `카테고리 이름으로 최저가 상품 조회 결과가 없을 때 - 에러를 반환`() {
         // given
-        given(productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc("Category1")).willReturn(Optional.empty())
+        given(productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(category1.name)).willReturn(Optional.empty())
 
         // when
-        val result = assertThrows<NoSuchElementException> {
-            coordinationService.getCheapestAndMostExpensiveByCategory("Category1")
+        val result = assertThrows<NotFoundException> {
+            coordinationService.getCheapestAndMostExpensiveByCategory(category1.name)
         }
 
         // then
-        assertThat(result.message).isEqualTo("No product found for category")
+        assertThat(result.errorCode).isEqualTo(ErrorCode.PRODUCT_NOT_FOUND)
     }
 
     @Test
