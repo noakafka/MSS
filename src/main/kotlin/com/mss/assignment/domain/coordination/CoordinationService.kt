@@ -18,7 +18,7 @@ class CoordinationService(
     private val brandRepository: BrandRepository,
     private val productRepository: ProductRepository,
 ) {
-    @Cacheable("lowestPriceProductsByCategory")
+    @Cacheable("cheapestProductEachCategory")
     fun findCheapestEachCategory(): CheapestEachCategory {
         val productDtoList = productRepository.findCheapestByCategoryOrderByCategory().map {
             ProductDto.fromEntity(it)
@@ -33,7 +33,7 @@ class CoordinationService(
         return  CheapestCoordinationByBrand.fromProductList(productRepository.findCheapestCoordinationByBrands(brand.id))
     }
 
-    @Cacheable("priceSummaryForCategory")
+    @Cacheable("cheapestAndMostExpensiveByCategory")
     fun getCheapestAndMostExpensiveByCategory(categoryName: String): CheapestAndMostExpensiveByCategory {
         val cheapestProduct = productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(categoryName).getOrElse { throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
         val mostExpensiveProduct = productRepository.findFirstByCategoryNameOrderByPriceDescUpdatedAtDesc(categoryName).getOrElse { cheapestProduct }

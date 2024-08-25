@@ -29,7 +29,7 @@ class BrandService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory", "cheapestCoordinationByBrand"], allEntries = true)
+    @CacheEvict(cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"], allEntries = true)
     fun deleteBrand(id: Long) {
         if (!brandRepository.existsById(id)) { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
         brandRepository.deleteById(id)

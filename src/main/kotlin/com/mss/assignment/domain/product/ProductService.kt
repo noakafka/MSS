@@ -18,7 +18,7 @@ class ProductService(
 ) {
 
     @Transactional
-    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory", "cheapestCoordinationByBrand"], allEntries = true)
+    @CacheEvict(cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"], allEntries = true)
     fun createProduct(productDto: ProductRequest): ProductDto {
         val brand = brandRepository.findById(productDto.brandId)
             .orElseThrow { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
@@ -35,7 +35,7 @@ class ProductService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory", "cheapestCoordinationByBrand"], allEntries = true)
+    @CacheEvict(cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"], allEntries = true)
     fun updateProduct(id: Long, productDto: ProductRequest): ProductDto {
         val product = productRepository.findById(id)
             .orElseThrow { NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
@@ -54,7 +54,7 @@ class ProductService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory", "cheapestCoordinationByBrand"], allEntries = true)
+    @CacheEvict(cacheNames = ["cheapestProductEachCategory", "cheapestAndMostExpensiveByCategory", "cheapestCoordinationByBrand"], allEntries = true)
     fun deleteProduct(id: Long) {
         if (!productRepository.existsById(id)) { throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
         productRepository.deleteById(id)
