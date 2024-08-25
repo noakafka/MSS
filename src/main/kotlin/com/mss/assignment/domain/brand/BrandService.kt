@@ -1,5 +1,7 @@
 package com.mss.assignment.domain.brand
 
+import com.mss.assignment.exception.ErrorCode
+import com.mss.assignment.exception.NotFoundException
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,7 +12,7 @@ class BrandService(
 ) {
     fun getBrandById(id: Long): Brand {
         return brandRepository.findById(id)
-            .orElseThrow { IllegalArgumentException("Brand not found with id: $id") }
+            .orElseThrow { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
     }
 
     @Transactional
@@ -29,9 +31,7 @@ class BrandService(
     @Transactional
     @CacheEvict(cacheNames = ["lowestPriceProductsByCategory", "priceSummaryForCategory", "cheapestCoordinationByBrand"], allEntries = true)
     fun deleteBrand(id: Long) {
-        if (!brandRepository.existsById(id)) {
-            throw IllegalArgumentException("Brand not found with id: $id")
-        }
+        if (!brandRepository.existsById(id)) { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
         brandRepository.deleteById(id)
     }
 }

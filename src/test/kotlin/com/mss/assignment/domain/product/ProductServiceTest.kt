@@ -5,7 +5,8 @@ import com.mss.assignment.domain.brand.BrandRepository
 import com.mss.assignment.domain.category.Category
 import com.mss.assignment.domain.category.CategoryRepository
 import com.mss.assignment.domain.product.request.ProductRequest
-import jakarta.persistence.EntityNotFoundException
+import com.mss.assignment.exception.ErrorCode
+import com.mss.assignment.exception.NotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -85,10 +86,10 @@ class ProductServiceTest {
         `when`(brandRepository.findById(brand.id)).thenReturn(Optional.empty())
 
         // when & then
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<NotFoundException> {
             productService.createProduct(productDto)
         }
-        assertEquals("Invalid brand ID", exception.message)
+        assertEquals(ErrorCode.BRAND_NOT_FOUND, exception.errorCode)
     }
 
     @Test
@@ -98,10 +99,10 @@ class ProductServiceTest {
         `when`(productRepository.findById(product.id)).thenReturn(Optional.empty())
 
         // when & then
-        val exception = assertThrows<EntityNotFoundException> {
+        val exception = assertThrows<NotFoundException> {
             productService.updateProduct(product.id, productDto)
         }
-        assertEquals("Product not found with ID: ${product.id}", exception.message)
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.errorCode)
     }
 
     @Test
@@ -123,9 +124,9 @@ class ProductServiceTest {
         `when`(productRepository.existsById(product.id)).thenReturn(false)
 
         // when & then
-        val exception = assertThrows<EntityNotFoundException> {
+        val exception = assertThrows<NotFoundException> {
             productService.deleteProduct(product.id)
         }
-        assertEquals("Product not found with ID: ${product.id}", exception.message)
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.errorCode)
     }
 }
