@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/brands")
 class BrandController(
-    private val brandService: BrandService
+    private val brandService: BrandService,
 ) {
-
     @PostMapping
-    fun createBrand(@RequestBody request: CreateBrandRequest): ResponseEntity<Brand> {
+    fun createBrand(
+        @RequestBody request: CreateBrandRequest,
+    ): ResponseEntity<Brand> {
         val createdBrand = brandService.createBrand(request.name)
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBrand)
     }
@@ -27,14 +28,16 @@ class BrandController(
     @PutMapping("/{id}")
     fun updateBrand(
         @PathVariable id: Long,
-        @RequestBody request: UpdateBrandRequest
+        @RequestBody request: UpdateBrandRequest,
     ): ResponseEntity<Brand> {
         val updatedBrand = brandService.updateBrand(id, request.name)
         return ResponseEntity.ok(updatedBrand)
     }
 
     @DeleteMapping("/{id}")
-    fun deleteBrand(@PathVariable id: Long): ResponseEntity<Void> {
+    fun deleteBrand(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
         brandService.deleteBrand(id)
         return ResponseEntity.noContent().build()
     }

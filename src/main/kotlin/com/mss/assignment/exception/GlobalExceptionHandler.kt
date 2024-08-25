@@ -9,23 +9,31 @@ import org.springframework.web.context.request.WebRequest
 
 @RestControllerAdvice
 class GlobalExceptionHandler(
-    private val messageSource: ResourceBundleMessageSource
+    private val messageSource: ResourceBundleMessageSource,
 ) {
     @ExceptionHandler(GlobalHttpException::class)
-    fun handleGlobalHttpException(ex: GlobalHttpException, request: WebRequest): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = ex.status.value(),
-            message = ex.errorCode.getMessage(messageSource)
-        )
+    fun handleGlobalHttpException(
+        ex: GlobalHttpException,
+        request: WebRequest,
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse =
+            ErrorResponse(
+                status = ex.status.value(),
+                message = ex.errorCode.getMessage(messageSource),
+            )
         return ResponseEntity(errorResponse, ex.status)
     }
 
     @ExceptionHandler(Exception::class)
-    fun handleAllExceptions(ex: Exception, request: WebRequest): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            message = ErrorCode.INTERNAL_SERVER_ERROR.getMessage(messageSource)
-        )
+    fun handleAllExceptions(
+        ex: Exception,
+        request: WebRequest,
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse =
+            ErrorResponse(
+                status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message = ErrorCode.INTERNAL_SERVER_ERROR.getMessage(messageSource),
+            )
         return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

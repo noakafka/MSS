@@ -9,6 +9,6 @@ data class CheapestAndMostExpensiveByCategory(
 ) {
     data class ProductWithBrandAndPrice(
         val brandName: String,
-        val price: BigDecimal
+        val price: BigDecimal,
     )
 }

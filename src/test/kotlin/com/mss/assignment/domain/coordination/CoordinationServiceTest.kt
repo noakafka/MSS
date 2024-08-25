@@ -18,11 +18,10 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.given
 import java.math.BigDecimal
-import java.util.*
+import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class CoordinationServiceTest {
-
     @Mock
     private lateinit var productRepository: ProductRepository
 
@@ -57,7 +56,10 @@ class CoordinationServiceTest {
         setEntityId(product3, 3L)
     }
 
-    private fun <T : Any> setEntityId(entity: T, id: Long) {
+    private fun <T : Any> setEntityId(
+        entity: T,
+        id: Long,
+    ) {
         val idField = entity::class.java.getDeclaredField("id")
         idField.isAccessible = true
         idField.set(entity, id)
@@ -73,9 +75,10 @@ class CoordinationServiceTest {
         given(productRepository.findCheapestByCategoryOrderByCategory()).willReturn(emptyList())
 
         // when
-        val result = assertThrows<NotFoundException> {
-            coordinationService.findCheapestEachCategory()
-        }
+        val result =
+            assertThrows<NotFoundException> {
+                coordinationService.findCheapestEachCategory()
+            }
 
         // then
         assertThat(result.errorCode).isEqualTo(ErrorCode.PRODUCT_NOT_FOUND)
@@ -106,9 +109,10 @@ class CoordinationServiceTest {
         given(brabdRepository.findCheapestBrand()).willReturn(Optional.empty())
 
         // when
-        val result = assertThrows<GlobalHttpException> {
-            coordinationService.findCheapestCoordinationByBrand()
-        }
+        val result =
+            assertThrows<GlobalHttpException> {
+                coordinationService.findCheapestCoordinationByBrand()
+            }
 
         // then
         assertThat(result.errorCode).isEqualTo(ErrorCode.BRAND_NOT_FOUND)
@@ -139,9 +143,10 @@ class CoordinationServiceTest {
         given(productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(category1.name)).willReturn(Optional.empty())
 
         // when
-        val result = assertThrows<NotFoundException> {
-            coordinationService.getCheapestAndMostExpensiveByCategory(category1.name)
-        }
+        val result =
+            assertThrows<NotFoundException> {
+                coordinationService.getCheapestAndMostExpensiveByCategory(category1.name)
+            }
 
         // then
         assertThat(result.errorCode).isEqualTo(ErrorCode.PRODUCT_NOT_FOUND)
@@ -180,5 +185,4 @@ class CoordinationServiceTest {
         assertThat(result.mostExpensiveProduct.brandName).isEqualTo(brand1.name)
         assertThat(result.mostExpensiveProduct.price).isEqualTo(BigDecimal(3000))
     }
-
 }

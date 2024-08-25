@@ -20,34 +20,45 @@ class CoordinationService(
 ) {
     @Cacheable("cheapestProductEachCategory")
     fun findCheapestEachCategory(): CheapestEachCategory {
-        val productDtoList = productRepository.findCheapestByCategoryOrderByCategory().map {
-            ProductDto.fromEntity(it)
+        val productDtoList =
+            productRepository.findCheapestByCategoryOrderByCategory().map {
+                ProductDto.fromEntity(it)
+            }
+        if (productDtoList.isEmpty()) {
+            throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND)
         }
-        if (productDtoList.isEmpty()) { throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
         return CheapestEachCategory.fromProductDtoList(productDtoList)
     }
 
     @Cacheable("cheapestCoordinationByBrand")
     fun findCheapestCoordinationByBrand(): CheapestCoordinationByBrand {
         val brand = brandRepository.findCheapestBrand().getOrElse { throw NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
-        return  CheapestCoordinationByBrand.fromProductList(productRepository.findCheapestCoordinationByBrands(brand.id))
+        return CheapestCoordinationByBrand.fromProductList(productRepository.findCheapestCoordinationByBrands(brand.id))
     }
 
     @Cacheable("cheapestAndMostExpensiveByCategory")
     fun getCheapestAndMostExpensiveByCategory(categoryName: String): CheapestAndMostExpensiveByCategory {
-        val cheapestProduct = productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(categoryName).getOrElse { throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
-        val mostExpensiveProduct = productRepository.findFirstByCategoryNameOrderByPriceDescUpdatedAtDesc(categoryName).getOrElse { cheapestProduct }
+        val cheapestProduct =
+            productRepository.findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(categoryName).getOrElse {
+                throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND)
+            }
+        val mostExpensiveProduct =
+            productRepository.findFirstByCategoryNameOrderByPriceDescUpdatedAtDesc(categoryName).getOrElse {
+                cheapestProduct
+            }
 
         return CheapestAndMostExpensiveByCategory(
             categoryName = categoryName,
-            cheapestProduct = ProductWithBrandAndPrice(
-                brandName = cheapestProduct.brand.name,
-                price = cheapestProduct.price
-            ),
-            mostExpensiveProduct = ProductWithBrandAndPrice(
-                brandName = mostExpensiveProduct.brand.name,
-                price = mostExpensiveProduct.price
-            ),
+            cheapestProduct =
+                ProductWithBrandAndPrice(
+                    brandName = cheapestProduct.brand.name,
+                    price = cheapestProduct.price,
+                ),
+            mostExpensiveProduct =
+                ProductWithBrandAndPrice(
+                    brandName = mostExpensiveProduct.brand.name,
+                    price = mostExpensiveProduct.price,
+                ),
         )
     }
 }

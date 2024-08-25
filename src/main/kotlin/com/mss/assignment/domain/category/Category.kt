@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 
 @Entity
 class Category(
-    name: String
+    name: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

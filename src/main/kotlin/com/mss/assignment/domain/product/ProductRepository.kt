@@ -1,19 +1,17 @@
 package com.mss.assignment.domain.product
 
-import com.mss.assignment.dto.CheapestCoordinationByBrand
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.math.BigDecimal
-import java.util.*
+import java.util.Optional
 
 @Repository
 interface ProductRepository : JpaRepository<Product, Long> {
-
     @EntityGraph(attributePaths = ["brand", "category"])
-    @Query("""
+    @Query(
+        """
         SELECT p FROM Product p
         WHERE p.price = (
             SELECT MIN(p2.price)
@@ -27,7 +25,8 @@ interface ProductRepository : JpaRepository<Product, Long> {
             AND p3.price = p.price
         )
         ORDER BY p.category.id
-    """)
+    """,
+    )
     fun findCheapestByCategoryOrderByCategory(): List<Product>
 
     @EntityGraph(attributePaths = ["brand", "category"])
@@ -40,7 +39,8 @@ interface ProductRepository : JpaRepository<Product, Long> {
     fun findFirstByCategoryNameOrderByPriceAscUpdatedAtDesc(categoryName: String): Optional<Product>
 
     @EntityGraph(attributePaths = ["brand", "category"])
-    @Query("""
+    @Query(
+        """
         SELECT p 
         FROM Product p
         WHERE p.brand.id = :brandId
@@ -57,6 +57,9 @@ interface ProductRepository : JpaRepository<Product, Long> {
             WHERE p2.brand.id = :brandId
             AND p2.category.id = p.category.id
         )
-    """)
-    fun findCheapestCoordinationByBrands(@Param("brandId") brandId: Long): List<Product>
+    """,
+    )
+    fun findCheapestCoordinationByBrands(
+        @Param("brandId") brandId: Long,
+    ): List<Product>
 }

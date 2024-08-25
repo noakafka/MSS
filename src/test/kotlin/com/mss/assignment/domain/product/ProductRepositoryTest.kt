@@ -18,9 +18,8 @@ import kotlin.test.Test
 class ProductRepositoryTest(
     @Autowired private val productRepository: ProductRepository,
     @Autowired private val categoryRepository: CategoryRepository,
-    @Autowired private val brandRepository: BrandRepository
+    @Autowired private val brandRepository: BrandRepository,
 ) {
-
     /**
      * Task 1 : 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API
      * ProductRepository.findCheapestByCategoryOrderByCategory 테스트
@@ -82,7 +81,6 @@ class ProductRepositoryTest(
         // then
         assertEquals(1, result.size)
         assertThat(result[0].id).isEqualTo(product2.id) // Category1 카테고리의 최저가 상품
-
     }
 
     @Test
