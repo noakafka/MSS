@@ -1,7 +1,6 @@
 package com.mss.assignment.domain.coordination.response
 
 import com.mss.assignment.domain.product.Product
-import java.math.BigDecimal
 
 data class CheapestCoordinationByBrand(
     val brandName: String,
