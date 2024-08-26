@@ -24,5 +24,7 @@ interface BrandRepository : JpaRepository<Brand, Long> {
     )
     fun findCheapestBrand(): Optional<Brand>
 
+    fun findByName(name: String): Optional<Brand>
+
     fun existsByName(name: String): Boolean
 }

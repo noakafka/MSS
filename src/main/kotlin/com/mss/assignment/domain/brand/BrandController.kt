@@ -2,6 +2,7 @@ package com.mss.assignment.domain.brand
 
 import com.mss.assignment.domain.brand.request.CreateBrandRequest
 import com.mss.assignment.domain.brand.request.UpdateBrandRequest
+import com.mss.assignment.dto.BrandDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,7 +21,7 @@ class BrandController(
     @PostMapping
     fun createBrand(
         @RequestBody request: CreateBrandRequest,
-    ): ResponseEntity<Brand> {
+    ): ResponseEntity<BrandDto> {
         val createdBrand = brandService.createBrand(request.name)
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBrand)
     }
@@ -29,7 +30,7 @@ class BrandController(
     fun updateBrand(
         @PathVariable id: Long,
         @RequestBody request: UpdateBrandRequest,
-    ): ResponseEntity<Brand> {
+    ): ResponseEntity<BrandDto> {
         val updatedBrand = brandService.updateBrand(id, request.name)
         return ResponseEntity.ok(updatedBrand)
     }

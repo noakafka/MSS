@@ -3,7 +3,7 @@ package com.mss.assignment.domain.product.request
 import java.math.BigDecimal
 
 data class ProductRequest(
-    val brandId: Long,
-    val categoryId: Long,
+    val brandName: String,
+    val categoryName: String,
     val price: BigDecimal,
 )

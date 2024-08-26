@@ -66,9 +66,9 @@ class ProductServiceTest {
     @Test
     fun `Product 생성 시 brand와 category가 유효한지 확인`() {
         // given
-        val productDto = ProductRequest(brand.id, category.id, BigDecimal(1000))
-        `when`(brandRepository.findById(brand.id)).thenReturn(Optional.of(brand))
-        `when`(categoryRepository.findById(category.id)).thenReturn(Optional.of(category))
+        val productDto = ProductRequest(brand.name, category.name, BigDecimal(1000))
+        `when`(brandRepository.findByName(brand.name)).thenReturn(Optional.of(brand))
+        `when`(categoryRepository.findByName(category.name)).thenReturn(Optional.of(category))
         `when`(productRepository.save(any())).thenReturn(product)
 
         // when
@@ -84,8 +84,8 @@ class ProductServiceTest {
     @Test
     fun `존재하지 않는 brand로 Product 생성 시 예외 발생`() {
         // given
-        val productDto = ProductRequest(brand.id, category.id, BigDecimal(1500))
-        `when`(brandRepository.findById(brand.id)).thenReturn(Optional.empty())
+        val productDto = ProductRequest(brand.name, category.name, BigDecimal(1500))
+        `when`(brandRepository.findByName(brand.name)).thenReturn(Optional.empty())
 
         // when & then
         val exception =
@@ -98,7 +98,7 @@ class ProductServiceTest {
     @Test
     fun `존재하지 않는 Product 업데이트 시 예외 발생`() {
         // given
-        val productDto = ProductRequest(brand.id, category.id, BigDecimal(1500))
+        val productDto = ProductRequest(brand.name, category.name, BigDecimal(1500))
         `when`(productRepository.findById(product.id)).thenReturn(Optional.empty())
 
         // when & then
