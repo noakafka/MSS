@@ -1,5 +1,6 @@
 package com.mss.assignment.domain.brand
 
+import com.mss.assignment.domain.product.ProductRepository
 import com.mss.assignment.exception.ErrorCode
 import com.mss.assignment.exception.GlobalHttpException
 import com.mss.assignment.exception.NotFoundException
@@ -23,6 +24,9 @@ import kotlin.test.Test
 class BrandServiceTest {
     @Mock
     private lateinit var brandRepository: BrandRepository
+
+    @Mock
+    private lateinit var productRepository: ProductRepository
 
     @InjectMocks
     private lateinit var brandService: BrandService
@@ -54,7 +58,7 @@ class BrandServiceTest {
             assertThrows<GlobalHttpException> {
                 brandService.createBrand(brand.name)
             }
-        assertEquals(ErrorCode.CONFLICT_NAME, exception.errorCode)
+        assertEquals(ErrorCode.NAME_CONFLICT, exception.errorCode)
     }
 
     @Test
@@ -82,7 +86,7 @@ class BrandServiceTest {
             assertThrows<GlobalHttpException> {
                 brandService.updateBrand(brand.id, brand.name)
             }
-        assertEquals(ErrorCode.CONFLICT_NAME, exception.errorCode)
+        assertEquals(ErrorCode.NAME_CONFLICT, exception.errorCode)
     }
 
     @Test
@@ -102,6 +106,7 @@ class BrandServiceTest {
     fun `Brand 성공적으로 삭제`() {
         // given
         `when`(brandRepository.existsById(brand.id)).thenReturn(true)
+        `when`(productRepository.existsByBrandId(brand.id)).thenReturn(false)
         doNothing().`when`(brandRepository).deleteById(brand.id)
 
         // when
@@ -109,5 +114,22 @@ class BrandServiceTest {
 
         // then
         verify(brandRepository, times(1)).deleteById(brand.id)
+    }
+
+    @Test
+    fun `상품이 존재하는 Brand 삭제 실패`() {
+        // given
+        `when`(brandRepository.existsById(brand.id)).thenReturn(true)
+        `when`(productRepository.existsByBrandId(brand.id)).thenReturn(true)
+
+        // when
+        val exception =
+            assertThrows<GlobalHttpException> {
+                brandService.deleteBrand(brand.id)
+            }
+        assertEquals(ErrorCode.BRAND_HAS_PRODUCTS, exception.errorCode)
+
+        // then
+        verify(brandRepository, times(0)).deleteById(brand.id)
     }
 }
