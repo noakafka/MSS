@@ -95,7 +95,7 @@ class CoordinationServiceTest {
         // then
         assertThat(result.items).hasSize(2)
         assertThat(result.items[0].brandName).isEqualTo(brand1.name)
-        assertThat(result.totalPrice).isEqualTo(BigDecimal(3000))
+        assertThat(result.totalPrice).isEqualTo(3000)
     }
 
     /**
@@ -130,7 +130,7 @@ class CoordinationServiceTest {
         // then
         assertThat(result.products).hasSize(1)
         assertThat(result.brandName).isEqualTo(brand1.name)
-        assertThat(result.totalPrice).isEqualTo(BigDecimal(1000))
+        assertThat(result.totalPrice).isEqualTo(1000)
     }
 
     /**
@@ -164,9 +164,9 @@ class CoordinationServiceTest {
         // then
         assertThat(result.categoryName).isEqualTo(category2.name)
         assertThat(result.cheapestProduct.brandName).isEqualTo(brand2.name)
-        assertThat(result.cheapestProduct.price).isEqualTo(BigDecimal(2000))
+        assertThat(result.cheapestProduct.price).isEqualTo(2000)
         assertThat(result.mostExpensiveProduct.brandName).isEqualTo(brand2.name)
-        assertThat(result.mostExpensiveProduct.price).isEqualTo(BigDecimal(2000))
+        assertThat(result.mostExpensiveProduct.price).isEqualTo(2000)
     }
 
     @Test
@@ -181,8 +181,8 @@ class CoordinationServiceTest {
         // then
         assertThat(result.categoryName).isEqualTo(category1.name)
         assertThat(result.cheapestProduct.brandName).isEqualTo(brand1.name)
-        assertThat(result.cheapestProduct.price).isEqualTo(BigDecimal(1000))
+        assertThat(result.cheapestProduct.price).isEqualTo(1000)
         assertThat(result.mostExpensiveProduct.brandName).isEqualTo(brand1.name)
-        assertThat(result.mostExpensiveProduct.price).isEqualTo(BigDecimal(3000))
+        assertThat(result.mostExpensiveProduct.price).isEqualTo(3000)
     }
 }

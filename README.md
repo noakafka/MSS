@@ -70,6 +70,7 @@ To run the automated tests for this system, use the following command:
 
 ```bash
 ./gradlew test
+java -jar build/libs/assignment-0.0.1-SNAPSHOT.jar
 ```
 
 ## Built With
