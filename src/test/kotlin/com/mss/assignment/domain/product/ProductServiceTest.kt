@@ -72,13 +72,13 @@ class ProductServiceTest {
         `when`(productRepository.save(any())).thenReturn(product)
 
         // when
-        val createdProduct = productService.createProduct(productRequest)
+        val createdProduct = productService.createProduct(productDto)
 
         // then
         assertNotNull(createdProduct)
         assertEquals(brand.name, createdProduct.brandName)
         assertEquals(category.name, createdProduct.categoryName)
-        assertEquals(productRequest.price.toInt(), createdProduct.price)
+        assertEquals(productDto.price.toInt(), createdProduct.price)
     }
 
     @Test
