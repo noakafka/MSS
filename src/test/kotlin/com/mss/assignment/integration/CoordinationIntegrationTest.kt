@@ -95,11 +95,11 @@ internal class CoordinationIntegrationTest {
 
     @Test
     fun `상의 카테고리로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API - 정상`() {
-        // CoordinationController의 /price-summary-by-category 엔드포인트 테스트
+        // CoordinationController의 /cheapest-and-most-expensive-by-category 엔드포인트 테스트
         val category = "상의"
         val response =
             restTemplate!!.getForEntity(
-                "/coordinations/price-summary-by-category?category=$category",
+                "/coordinations/cheapest-and-most-expensive-by-category?category=$category",
                 CheapestAndMostExpensiveByCategory::class.java,
             )
 
@@ -122,11 +122,11 @@ internal class CoordinationIntegrationTest {
 
     @Test
     fun `존재하지 않는 카테고리로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API - 실패`() {
-        // CoordinationController의 /price-summary-by-category 엔드포인트 테스트
+        // CoordinationController의 /cheapest-and-most-expensive-by-category 엔드포인트 테스트
         val category = "축구화"
         val response =
             restTemplate!!.getForEntity(
-                "/coordinations/price-summary-by-category?category=$category",
+                "/coordinations/cheapest-and-most-expensive-by-category?category=$category",
                 ErrorResponse::class.java,
             )
         assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)

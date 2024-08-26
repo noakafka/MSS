@@ -20,8 +20,8 @@ class CoordinationController(
         return ResponseEntity.ok(response)
     }
 
-    @GetMapping("/price-summary-by-category")
-    fun getPriceSummaryByCategory(
+    @GetMapping("/cheapest-and-most-expensive-by-category")
+    fun getCheapestAndMostExpensiveByCategory(
         @RequestParam("category") category: String,
     ): ResponseEntity<CheapestAndMostExpensiveByCategory> {
         val response = coordinationService.getCheapestAndMostExpensiveByCategory(category)

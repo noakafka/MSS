@@ -12,11 +12,15 @@ interface BrandRepository : JpaRepository<Brand, Long> {
         SELECT b FROM Brand b
         WHERE b.id = (
             SELECT subquery.brand_id FROM (
-              SELECT p.brand.id AS brand_id, p.category.id AS category_id, MIN(p.price) AS price
-              FROM Product p
-              GROUP BY p.brand.id, p.category.id
-            ) as subquery
+                SELECT p.brand.id AS brand_id, p.category.id AS category_id, MIN(p.price) AS price
+                FROM Product p
+                GROUP BY p.brand.id, p.category.id
+            ) AS subquery
             GROUP BY subquery.brand_id
+            HAVING COUNT(DISTINCT subquery.category_id) = (
+                SELECT COUNT(DISTINCT c.id)
+                FROM Category c
+            )
             ORDER BY SUM(subquery.price) ASC, subquery.brand_id DESC
             LIMIT 1
         )

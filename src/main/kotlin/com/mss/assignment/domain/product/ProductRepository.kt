@@ -18,11 +18,13 @@ interface ProductRepository : JpaRepository<Product, Long> {
             FROM Product p2
             WHERE p2.category.id = p.category.id
         )
-        AND p.updatedAt = (
-            SELECT MAX(p3.updatedAt)
+        AND p.id = (
+            SELECT p3.id
             FROM Product p3
             WHERE p3.category.id = p.category.id
             AND p3.price = p.price
+            ORDER BY p3.updatedAt DESC
+            LIMIT 1
         )
         ORDER BY p.category.id
     """,
@@ -45,11 +47,13 @@ interface ProductRepository : JpaRepository<Product, Long> {
         FROM Product p
         WHERE p.brand.id = :brandId
         AND p.id = (
-            SELECT MAX(p2.id)
+            SELECT p2.id
             FROM Product p2
             WHERE p2.brand.id = p.brand.id
             AND p2.category.id = p.category.id
             AND p2.price = p.price
+            ORDER BY p2.updatedAt DESC
+            LIMIT 1
         )
         AND p.price = (
             SELECT MIN(p2.price)
@@ -57,6 +61,7 @@ interface ProductRepository : JpaRepository<Product, Long> {
             WHERE p2.brand.id = :brandId
             AND p2.category.id = p.category.id
         )
+        ORDER BY p.category.id
     """,
     )
     fun findCheapestCoordinationByBrands(
