@@ -109,20 +109,20 @@
     </div>
 
     <div>
+        <button onclick="fetchCheapestCoordinationByBrand()">카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회</button>
+    </div>
+
+    <div>
         <input type="text" id="categoryInput" placeholder="Enter Category">
         <button onclick="fetchPriceSummaryByCategory()">단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품가격, 총액을 조회</button>
     </div>
 
     <div>
-        <button onclick="fetchCheapestCoordinationByBrand()">카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회</button>
+        <button onclick="location.href='/admin/products'">상품 관리</button>
     </div>
 
     <div>
-        <button onclick="location.href='/admin/products'">상품 관리 페이지로 이동</button>
-    </div>
-
-    <div>
-        <button onclick="location.href='/admin/brands'">브랜드 관리 페이지로 이동</button>
+        <button onclick="location.href='/admin/brands'">브랜드 관리</button>
     </div>
 </div>
 
@@ -173,7 +173,7 @@
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/coordinations/price-summary-by-category?category=${encodeURIComponent(category)}`);
+            const response = await fetch(`http://localhost:8080/coordinations/cheapest-and-most-expensive-by-category?category=${encodeURIComponent(category)}`);
             if (response.ok) {
                 const result = await response.json();
                 displayPriceSummaryByCategory(result);
