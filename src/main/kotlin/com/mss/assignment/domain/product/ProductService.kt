@@ -9,6 +9,7 @@ import com.mss.assignment.exception.NotFoundException
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrElse
 
 @Service
 class ProductService(
@@ -22,12 +23,11 @@ class ProductService(
         allEntries = true,
     )
     fun createProduct(productDto: ProductRequest): ProductDto {
-        val brand =
-            brandRepository.findById(productDto.brandId)
-                .orElseThrow { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
+        val brand = brandRepository.findByName(productDto.brandName).getOrElse { throw NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
         val category =
-            categoryRepository.findById(productDto.categoryId)
-                .orElseThrow { NotFoundException(ErrorCode.CATEGORY_NOT_FOUND) }
+            categoryRepository.findByName(
+                productDto.categoryName,
+            ).getOrElse { throw NotFoundException(ErrorCode.CATEGORY_NOT_FOUND) }
 
         val product =
             Product(
@@ -52,10 +52,10 @@ class ProductService(
             productRepository.findById(id)
                 .orElseThrow { NotFoundException(ErrorCode.PRODUCT_NOT_FOUND) }
         val brand =
-            brandRepository.findById(productDto.brandId)
+            brandRepository.findByName(productDto.brandName)
                 .orElseThrow { NotFoundException(ErrorCode.BRAND_NOT_FOUND) }
         val category =
-            categoryRepository.findById(productDto.categoryId)
+            categoryRepository.findByName(productDto.categoryName)
                 .orElseThrow { NotFoundException(ErrorCode.CATEGORY_NOT_FOUND) }
 
         product.update(

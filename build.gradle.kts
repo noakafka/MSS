@@ -41,6 +41,8 @@ dependencies {
     }
     implementation("javax.cache:cache-api:1.1.1")
 
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("com.h2database:h2")
     annotationProcessor("org.projectlombok:lombok")
