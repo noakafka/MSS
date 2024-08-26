@@ -66,19 +66,19 @@ class ProductServiceTest {
     @Test
     fun `Product 생성 시 brand와 category가 유효한지 확인`() {
         // given
-        val productDto = ProductRequest(brand.id, category.id, BigDecimal(1000))
+        val productRequest = ProductRequest(brand.id, category.id, BigDecimal(1000))
         `when`(brandRepository.findById(brand.id)).thenReturn(Optional.of(brand))
         `when`(categoryRepository.findById(category.id)).thenReturn(Optional.of(category))
         `when`(productRepository.save(any())).thenReturn(product)
 
         // when
-        val createdProduct = productService.createProduct(productDto)
+        val createdProduct = productService.createProduct(productRequest)
 
         // then
         assertNotNull(createdProduct)
         assertEquals(brand.name, createdProduct.brandName)
         assertEquals(category.name, createdProduct.categoryName)
-        assertEquals(productDto.price, createdProduct.price)
+        assertEquals(productRequest.price.toInt(), createdProduct.price)
     }
 
     @Test

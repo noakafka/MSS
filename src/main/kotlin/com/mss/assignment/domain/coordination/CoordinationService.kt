@@ -52,12 +52,12 @@ class CoordinationService(
             cheapestProduct =
                 ProductWithBrandAndPrice(
                     brandName = cheapestProduct.brand.name,
-                    price = cheapestProduct.price,
+                    price = cheapestProduct.price.toInt(),
                 ),
             mostExpensiveProduct =
                 ProductWithBrandAndPrice(
                     brandName = mostExpensiveProduct.brand.name,
-                    price = mostExpensiveProduct.price,
+                    price = mostExpensiveProduct.price.toInt(),
                 ),
         )
     }
