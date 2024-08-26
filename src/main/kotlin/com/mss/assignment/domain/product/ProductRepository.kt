@@ -62,4 +62,7 @@ interface ProductRepository : JpaRepository<Product, Long> {
     fun findCheapestCoordinationByBrands(
         @Param("brandId") brandId: Long,
     ): List<Product>
+
+    // 특정 brandId를 가진 Product가 존재하는지 확인하는 함수
+    fun existsByBrandId(brandId: Long): Boolean
 }

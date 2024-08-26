@@ -4,11 +4,12 @@ import org.springframework.context.MessageSource
 import java.util.Locale
 
 enum class ErrorCode(private val key: String) {
-    CONFLICT_NAME("error.conflict.name"),
+    NAME_CONFLICT("error.conflict.name"),
     PRODUCT_NOT_FOUND("error.not_found.product"),
     BRAND_NOT_FOUND("error.not_found.brand"),
     CATEGORY_NOT_FOUND("error.not_found.category"),
     INTERNAL_SERVER_ERROR("error.internal_server"),
+    BRAND_HAS_PRODUCTS("error.conflict.brand_has_products"),
     ;
 
     fun getMessage(
