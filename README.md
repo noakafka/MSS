@@ -86,7 +86,6 @@ erDiagram
 3. **Run the application:**
 
    ```bash
-   ./gradlew bootRun
    java -jar build/libs/assignment-0.0.1-SNAPSHOT.jar
    ```
 
